@@ -96,6 +96,18 @@ public class DataEntryFrame extends JFrame
 	private void setVisuals(FormData data)
 	{
 		// TODO: set the text fields and the signature as corresponding to the fields in FormData.
+		firstName.setText(data.getFirstName());
+		char middleIn = data.getMiddleInitial();
+		String middleI = Character.toString(middleIn);
+		middleInitial.setText(middleI);
+		lastName.setText(data.getLastName());
+		displayName.setText(data.getDisplayName());
+		SSN.setText(data.getSSN());
+		phone.setText(data.getPhone());
+		email.setText(data.getEmail());
+		address.setText(data.getAddress());
+		spanel.setSignature(data.getSignature());
+		
 	}
 
 	/**
@@ -124,8 +136,34 @@ public class DataEntryFrame extends JFrame
 		this.add(formSelect);
 
 		// TODO: add in all form-fillable components:
-		JPanel formFill = new JPanel(/* TODO: add layout manager */);
+		
+		
+		JPanel formFill = new JPanel(/* TODO: add layout manager */new GridLayout(8,2) );
 		// TODO: add to panel...
+		formFill.add(firstNameInfo);
+		formFill.add(firstName);
+		
+		formFill.add(midddleInitialInfo);
+		formFill.add(middleInitial);
+		
+		formFill.add(lastNameInfo);
+		formFill.add(lastName);
+		
+		formFill.add(displayNameInfo);
+		formFill.add(displayName);
+		
+		formFill.add(SSNInfo);
+		formFill.add(SSN);
+		
+		formFill.add(phoneInfo);
+		formFill.add(phone);
+		
+		formFill.add(emailInfo);
+		formFill.add(email);
+		
+		formFill.add(addressInfo);
+		formFill.add(address);
+		
 		this.add(formFill);
 
 		// Add in the signature panel:
@@ -164,6 +202,10 @@ public class DataEntryFrame extends JFrame
 
 			// TODO: use the JTextFields and the signature panel to set the values
 			// of the selected FormData object.
+			
+			boolean correct = datalist.get(select).setValues(firstName.getText(),middleInitial.getText().charAt(0), 
+					lastName.getText(), displayName.getText(), SSN.getText(), phone.getText(), 
+					email.getText(), address.getText(), spanel.getSignature());
 
 			this.setVisuals(datalist.get(select));
 			DefaultComboBoxModel<String> newComboBoxModel = getComboBoxModel(datalist);
@@ -171,16 +213,36 @@ public class DataEntryFrame extends JFrame
 			formSelect.setSelectedIndex(select);
 
 			// TODO: display an error message if setting the values failed. Else, display a success message.w
+			if(!correct)
+			{
+			errorField.setText("Error");
+			}
+			else
+			{
+				errorField.setText("");
+			}
 		});
 
 		JButton resetForm = new JButton("Reset");
 		resetForm.addActionListener((e) -> {
 			int select = formSelect.getSelectedIndex();
 			// TODO: reset the values on the selected form data
+			firstName.setText("");
+			middleInitial.setText("");
+			lastName.setText("");
+			displayName.setText("");
+			SSN.setText("");
+			phone.setText("");
+			email.setText("");
+			address.setText("");
 			this.setVisuals(datalist.get(select));
 		});
 
 		// TODO: add buttons to panel and add to frame
+		formHandling.add(createForm);
+		formHandling.add(saveForm);
+		formHandling.add(resetForm);
+		this.add(formHandling);
 
 		// Add in the error message field:
 		this.errorField.setEditable(false);
