@@ -185,7 +185,7 @@ public class DataEntryFrame extends JFrame
 			public void mouseDragged(MouseEvent e)
 			{
 				// TODO: add a point to the panel on drag and repaint.
-				p.add(e.getPoint());
+				spanel.addPoint(e.getPoint());
 				spanel.repaint();
 			}
 		});
@@ -284,30 +284,37 @@ public class DataEntryFrame extends JFrame
 			// TODO: extract object from a file (hint, use file.getAbsolutePath()):
 			//		 You will use the file to replace the datalist object. I.e. you will be loading in a new
 			//		 list of formdata.
+			FileInputStream fileIn;
+			ObjectInputStream inPut;
 			try 
 			{
 				filePath = file.getAbsolutePath();
-				FileInputStream fileIn = new FileInputStream(filePath);
-	            ObjectInputStream inPut = new ObjectInputStream(fileIn);
+				fileIn = new FileInputStream(filePath);
+	            inPut = new ObjectInputStream(fileIn);
 				datalist = (ArrayList<FormData>)inPut.readObject(); 
+				errorField.setText("Success");
+				fileIn.close();
+				inPut.close();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				errorField.setText("Failed");
 			} catch (ClassNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				errorField.setText("Failed");
 			}
 			// TODO: display error message on fail, else display success message
-			errorField.setText("Success");
+			
 			
         	// Use this code snippet to reset visuals after importing:
-			/*
+			
             int select = 0;
 			DefaultComboBoxModel<String> newComboBoxModel = getComboBoxModel(datalist);
 			formSelect.setModel(newComboBoxModel);
 			formSelect.setSelectedIndex(select);
 			this.setVisuals(datalist.get(select));
-			*/
+			
 		});
 		JButton exportButton = new JButton("Export");
 		exportButton.addActionListener((e) -> {
@@ -331,12 +338,15 @@ public class DataEntryFrame extends JFrame
 	            ObjectOutputStream outPut = new ObjectOutputStream(fileOut);
 				outPut.writeObject(datalist);
 				outPut.close();
+				fileOut.close();
+				errorField.setText("Success");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				errorField.setText("Failed");
 			}
 			// TODO: display error message on fail, else display success message
-			errorField.setText("Success");
+			
 		});
 
 		// TODO: add import/export to panel and add to frame
